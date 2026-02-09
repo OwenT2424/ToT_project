@@ -1,6 +1,7 @@
-# Tale o' Tree
+# Tree o' Tale
+
 ## Project Description
 The project invisions a website that can host a space for users to write and reposit their own stories, fanfictions and other fan works. Like other websites of this kind, like Archive of Our Own and Wattpad, ToT will hold a wide collecetion of stories for the users to find and read, give approval, and comment. The unique mechanic that ToT will offer is that users can "branch" other user's stories. ToT will provide a way for users to create "fanfiction of fanficiton" on the spot, and encourage creativity and community collaboration by allowing authors to approve other user's "branches" of their story to be hosted along with theirs. We believe it's a fun and creative feature that many users would love in the evergrowing fanwork community, with websites like Arhive of Our Own still garnering tens of millions of page views every day.
-## Purpose
-_write here_
 
+## Purpose
+Our purpose is to foster a community-driven environment which thrives on creative freedom and storytelling in a world full of dread, Tot offers an escape where you choose your story and you decide how your world flows. Not a fan of the ending? rewrite it and make it your own; your rendition just might become the ending everyone falls in loves with. Your story can climb the ranks of popularity, dominate the charts and who knows? your story might just become the next no.1 original .Our dreams are to immerse the world in all the possibilities that come with being an author: collaboratively, shaping our future, beyond our own minds, we are better together. 
