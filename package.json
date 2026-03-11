@@ -19,9 +19,13 @@
   },
   "homepage": "https://github.com/OwenT2424/ToT_project#readme",
   "dependencies": {
+    "bcrypt": "^6.0.0",
     "dotenv": "^17.2.4",
     "express": "^5.2.1",
-    "mysql2": "^3.16.3"
+    "express-mysql-session": "^3.0.3",
+    "express-session": "^1.19.0",
+    "mysql2": "^3.16.3",
+    "uuid": "^13.0.0"
   },
   "devDependencies": {
     "nodemon": "^3.1.11"
