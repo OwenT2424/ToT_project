@@ -289,7 +289,7 @@ const SALT_ROUNDS = 10;
 
 ---
 
-### Task 6 (i) — Protect the Routes (`src/routes/index.js`) - TEJAS
+### Task 5 (i) — Protect the Routes (`src/routes/index.js`) - TEJAS
 
 **Goal:** Enforce authentication on routes that modify data.
 
@@ -305,16 +305,16 @@ Insert it as the second argument (between the path and the controller) on routes
 router.post("/stories", requireAuth, storyController.createStory);
 ```
 
-- [ ] **6a** — Protect `POST /stories`.
-- [ ] **6b** — Protect `POST /stories/:storyId/chapters`.
-- [ ] **6c** — Protect `POST /stories/:storyId/chapters/:chapterId`.
+- [ ] **5a** — Protect `POST /stories`.
+- [ ] **5b** — Protect `POST /stories/:storyId/chapters`.
+- [ ] **5c** — Protect `POST /stories/:storyId/chapters/:chapterId`.
 
 **Done when:** those three endpoints return `401` when called without a session, and work normally when called after logging in.
 
 
 ---
 
-### Task 6 (ii) — Link Controllers to Routes (`src/routes/index.js`)
+### Task 5 (ii) — Link Controllers to Routes (`src/routes/index.js`)
 
 **Goal:** Replace every `TODO` placeholder with its real controller function.
 
