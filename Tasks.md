@@ -336,8 +336,8 @@ router.post("/auth/register", (req, res) => res.json({ message: "TODO" }));
 router.post("/auth/register", authController.register);
 ```
 
-- [ ] **4a** — Replace the three `/auth/*` stubs.
-- [ ] **4b** — Replace the three `/stories` stubs.
-- [ ] **4c** — Replace the four `/stories/:storyId/chapters` stubs.
+- [ ] **5a** — Replace the three `/auth/*` stubs.
+- [ ] **5b** — Replace the three `/stories` stubs.
+- [ ] **5c** — Replace the four `/stories/:storyId/chapters` stubs.
 
 **Done when:** all endpoints return real data or meaningful error messages instead of `"TODO"`.
