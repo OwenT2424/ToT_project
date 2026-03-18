@@ -8,9 +8,49 @@ router.get("/health", healthCheck);
 
 // auth routes can go below
 
+router.post("/auth/register", (req, res) => {
+  res.json({ message: "TODO" });
+});
+
+router.post("/auth/login", (req, res) => {
+  res.json({ message: "TODO" });
+});
+
+router.post("/auth/logout", (req, res) => {
+  res.json({ message: "TODO" });
+});
+
 // stories route can go below
+router.post("/stories", (req, res) => {
+  res.json({ message: "TODO" });
+});
+
+router.get("/stories", (req, res) => {
+  res.json({ message: "TODO" });
+});
+
+router.get("/stories/:storyId", (req, res) => {
+  res.json({ message: "TODO" });
+});
 
 // chapters route can go below
+// CHAPTER ROUTES
+
+router.get("/stories/:storyId/chapters", (req, res) => {
+  res.json({ message: "TODO" });
+});
+
+router.get("/stories/:storyId/chapters/:chapterId", (req, res) => {
+  res.json({ message: "TODO" });
+});
+
+router.post("/stories/:storyId/chapters", (req, res) => {
+  res.json({ message: "TODO" });
+});
+
+router.post("/stories/:storyId/chapters/:chapterId", (req, res) => {
+  res.json({ message: "TODO" });
+});
 
 // Server Block -----
 module.exports = router;
