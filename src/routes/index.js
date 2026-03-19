@@ -34,7 +34,6 @@ router.get("/stories/:storyId", (req, res) => {
 });
 
 // chapters route can go below
-// CHAPTER ROUTES
 
 router.get("/stories/:storyId/chapters", (req, res) => {
   res.json({ message: "TODO" });
