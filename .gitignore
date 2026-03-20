@@ -28,3 +28,12 @@ build/
 .vscode/
 .idea/
 *.swp
+
+# Local Backup Restrictions
+# src/routes/index.js
+src/routes/index-backup.js
+src/models/backup/
+src/controllers/backup/
+src/controllers/chapterController.js
+src/controllers/healthController.js
+src/controllers/storyController.js
