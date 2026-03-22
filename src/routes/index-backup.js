@@ -1,4 +1,3 @@
-// Server Block -----
 const express = require("express");
 const router = express.Router();
 const { healthCheck } = require("../controllers/healthController");
@@ -6,44 +5,34 @@ const authController = require("../controllers/authController");
 const storyController = require("../controllers/storyController");
 const chapterController = require("../controllers/chapterController");
 const requireAuth = require("../middleware/requireAuth");
+
 router.get("/health", healthCheck);
 
-// API Routing Block -> ZAYNAH -----
-
-// auth routes can go below
-
+// auth routes can go here
 router.post("/auth/register", authController.register);
 router.post("/auth/login", authController.login);
 router.post("/auth/logout", authController.logout);
 
-// stories route can go below
+// stories route can go here
 router.post("/stories", requireAuth, storyController.createStory);
-
 router.get("/stories", storyController.getAllStories);
+router.get("/stories/:storyId", storyController.getStory);
 
-router.get("/stories/:id", storyController.getStory);
-
-// chapters route can go below
-
-// Get all sentences for a specific story
+// chapters route can go here
 router.get("/stories/:storyId/chapters", chapterController.getChapters);
-
-// Get a specific sentence/chapter by its ID
-router.get("/stories/:storyId/chapters/:id", chapterController.getChapter);
-
-// Create a new sentence (Contribution) for a story
+router.get(
+  "/stories/:storyId/chapters/:chapterId",
+  chapterController.getChapter,
+);
 router.post(
   "/stories/:storyId/chapters",
   requireAuth,
   chapterController.createChapter,
 );
-
-// Update a specific sentence (if the user is the author)
 router.post(
-  "/stories/:storyId/chapters/:id",
+  "/stories/:storyId/chapters/:chapterId",
   requireAuth,
   chapterController.updateChapter,
 );
 
-// Server Block -----
 module.exports = router;
