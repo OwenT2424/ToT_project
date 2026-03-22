@@ -1,7 +1,9 @@
-const express = require('express');
-const routes = require('./routes');
-const session = require("express-session")
-const MySQLStore = require("express-mysql-session")(session);
+import express from "express";
+import routes from "./routes/index.js";
+import session from "express-session";
+import createMySQLStore from "express-mysql-session";
+
+const MySQLStore = createMySQLStore(session);
 
 const app = express();
 app.use(express.json());
@@ -29,4 +31,4 @@ app.use(session({
 
 app.use('/api', routes);
 
-module.exports = app;
+export default app;

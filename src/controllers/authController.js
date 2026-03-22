@@ -1,8 +1,8 @@
-const bcrypt = require("bcrypt");
-const User = require("../models/userModel");
+import bcrypt from "bcrypt";
+import User from "../models/userModel.js";
 const SALT_ROUNDS = 10;
 
-exports.register = async (req, res) => {
+export const register = async (req, res) => {
   const { username, email, password } = req.body;
 
   if (!username || !email || !password) {
@@ -35,7 +35,7 @@ exports.register = async (req, res) => {
   }
 };
 
-exports.login = async (req, res) => {
+export const login = async (req, res) => {
   const { email, password } = req.body;
 
   if (!email || !password) {
@@ -61,7 +61,7 @@ exports.login = async (req, res) => {
   }
 };
 
-exports.logout = (req, res) => {
+export const logout = (req, res) => {
   req.session.destroy((err) => {
     if (err) return res.status(500).json({ error: "Logout failed." });
     res.clearCookie("connect.sid");

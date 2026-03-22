@@ -1,4 +1,4 @@
 // DO NOT EDIT
-exports.healthCheck = (req, res) => {
+export const healthCheck = (req, res) => {
   res.json({ status: 'OK' });
 };

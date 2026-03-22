@@ -1,9 +1,9 @@
 // Run with: node src/seeders/seed.js
-require('dotenv').config();
+import "dotenv/config";
 
-const bcrypt = require('bcrypt');
-const { v4: uuidv4 } = require('uuid');
-const pool = require('../config/db');
+import bcrypt from "bcrypt";
+import { v4 as uuidv4 } from "uuid";
+import pool from "../config/db.js";
 
 const SALT_ROUNDS = 10;
 

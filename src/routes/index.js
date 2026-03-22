@@ -1,11 +1,11 @@
 // Server Block -----
-const express = require("express");
+import express from "express";
 const router = express.Router();
-const { healthCheck } = require("../controllers/healthController");
-const authController = require("../controllers/authController");
-const storyController = require("../controllers/storyController");
-const chapterController = require("../controllers/chapterController");
-const requireAuth = require("../middleware/requireAuth");
+import { healthCheck } from "../controllers/healthController.js";
+import * as authController from "../controllers/authController.js";
+import * as storyController from "../controllers/storyController.js";
+import * as chapterController from "../controllers/chapterController.js";
+import requireAuth from "../middleware/requireAuth.js";
 
 router.get("/health", healthCheck);
 
@@ -34,4 +34,4 @@ router.post(
 );
 
 // Server Block -----
-module.exports = router;
+export default router;

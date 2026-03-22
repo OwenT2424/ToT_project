@@ -1,8 +1,8 @@
 // SERVER BLOCK -----
-const Chapter = require("../models/chapterModel");
-const Story = require("../models/storyModel");
+import Chapter from "../models/chapterModel.js";
+import Story from "../models/storyModel.js";
 
-exports.createChapter = async (req, res) => {
+export const createChapter = async (req, res) => {
   try {
     const { storyId } = req.params;
     const { title, content, parent_id } = req.body;
@@ -60,7 +60,7 @@ exports.createChapter = async (req, res) => {
   }
 };
 
-exports.getChapters = async (req, res) => {
+export const getChapters = async (req, res) => {
   try {
     // Fetches all sentences/chapters for a specific story
     const story = await Story.findById(req.params.storyId);
@@ -74,7 +74,7 @@ exports.getChapters = async (req, res) => {
   }
 };
 
-exports.getChapter = async (req, res) => {
+export const getChapter = async (req, res) => {
   try {
     const chapter = await Chapter.findById(req.params.id);
     if (!chapter) {
@@ -87,7 +87,7 @@ exports.getChapter = async (req, res) => {
   }
 };
 
-exports.updateChapter = async (req, res) => {
+export const updateChapter = async (req, res) => {
   try {
     const { title, content } = req.body;
     const { id } = req.params;

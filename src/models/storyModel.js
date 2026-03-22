@@ -1,6 +1,6 @@
 // Server Block ------
-const pool = require("../config/db");
-const { v4: uuidv4 } = require("uuid");
+import pool from "../config/db.js";
+import { v4 as uuidv4 } from "uuid";
 
 const Story = {
   async create({ author_id, title }) {
@@ -39,4 +39,4 @@ const Story = {
 };
 
 // Server Block ------
-module.exports = Story;
+export default Story;

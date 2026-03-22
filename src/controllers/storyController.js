@@ -1,7 +1,7 @@
 // SERVER BLOCK -----
-const Story = require("../models/storyModel");
+import Story from "../models/storyModel.js";
 
-exports.createStory = async (req, res) => {
+export const createStory = async (req, res) => {
   try {
     const { title } = req.body;
     // Assuming author_id comes from a decoded JWT or session in req.user
@@ -21,7 +21,7 @@ exports.createStory = async (req, res) => {
   }
 };
 
-exports.getAllStories = async (req, res) => {
+export const getAllStories = async (req, res) => {
   try {
     const stories = await Story.findAll();
     res.status(200).json(stories);
@@ -33,7 +33,7 @@ exports.getAllStories = async (req, res) => {
   }
 };
 
-exports.getStory = async (req, res) => {
+export const getStory = async (req, res) => {
   try {
     const story = await Story.findById(req.params.storyId);
     if (!story) {
