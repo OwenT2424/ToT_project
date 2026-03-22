@@ -4,34 +4,73 @@ const Story = require("../models/storyModel");
 
 exports.createChapter = async (req, res) => {
   try {
-    const { story_id, parent_id, title, content } = req.body;
+    const { storyId } = req.params;
+    const { title, content, parent_id } = req.body;
     const author_id = req.user.id;
 
-    if (!story_id || !content) {
-      return res.status(400).json({ message: "Story ID and content are required" });
+    if (!title || !content) {
+      return res.status(400).json({ error: "title and content are required." });
     }
 
-    const newContribution = await Chapter.create({ 
-      story_id, 
-      parent_id, // null if it's the very first sentence
-      author_id, 
-      title, 
-      content 
+    if (!storyId || !content) {
+      return res.status(400).json({ message: "Story ID is required" });
+    }
+
+    const story = await Story.findById(storyId);
+    if (!story) return res.status(404).json({ error: "Story not found." });
+
+    if (!parent_id) {
+      // Root chapter: only the story owner can create it
+      if (story.author_id !== req.session.userId) {
+        return res
+          .status(403)
+          .json({ error: "Only the story owner can write the root chapter." });
+      }
+      // Enforce only one root chapter per story
+      const existingRoot = await Chapter.findRootByStoryId(storyId);
+      if (existingRoot) {
+        return res
+          .status(409)
+          .json({ error: "A root chapter already exists for this story." });
+      }
+    } else {
+      // Branch: validate parent exists and belongs to this story
+      const parent = await Chapter.findById(parent_id);
+      if (!parent)
+        return res.status(404).json({ error: "Parent chapter not found." });
+      if (parent.story_id !== storyId) {
+        return res
+          .status(400)
+          .json({ error: "Parent chapter does not belong to this story." });
+      }
+    }
+
+    const newContribution = await Chapter.create({
+      story_id: storyId,
+      parent_id: parent_id || null,
+      author_id: req.session.userId,
+      title,
+      content,
     });
 
     res.status(201).json(newContribution);
   } catch (error) {
-    res.status(500).json({ message: "Error adding contribution", error: error.message });
+    console.error("createChapter error:", err);
+    return res.status(500).json({ error: "Failed to create chapter." });
   }
 };
 
 exports.getChapters = async (req, res) => {
   try {
     // Fetches all sentences/chapters for a specific story
+    const story = await Story.findById(req.params.storyId);
+    if (!story) return res.status(404).json({ error: "Story not found." });
+
     const chapters = await Chapter.findByStoryId(req.params.storyId);
     res.status(200).json(chapters);
   } catch (error) {
-    res.status(500).json({ message: "Error fetching contributions", error: error.message });
+    console.error("getChapters error:", err);
+    return res.status(500).json({ error: "Failed to fetch chapters." });
   }
 };
 
@@ -39,11 +78,12 @@ exports.getChapter = async (req, res) => {
   try {
     const chapter = await Chapter.findById(req.params.id);
     if (!chapter) {
-      return res.status(404).json({ message: "Contribution not found" });
+      return res.status(404).json({ message: "Chapter not found" });
     }
     res.status(200).json(chapter);
   } catch (error) {
-    res.status(500).json({ message: "Error fetching contribution", error: error.message });
+    console.error("getChapter error:", err);
+    return res.status(500).json({ error: "Failed to fetch chapter." });
   }
 };
 
@@ -52,16 +92,30 @@ exports.updateChapter = async (req, res) => {
     const { title, content } = req.body;
     const { id } = req.params;
 
-    // Check if it exists first
-    const existing = await Chapter.findById(id);
-    if (!existing) {
-      return res.status(404).json({ message: "Contribution not found" });
+    if (!title && !content) {
+      return res
+        .status(400)
+        .json({ error: "Provide at least a title or content to update." });
     }
 
-    // Optional: Check if req.user.id === existing.author_id to ensure only the owner edits
+    // Check if it exists first
+    const existing = await Chapter.findById(id);
+    if (!existing || existing.story_id !== req.params.storyId) {
+      return res.status(404).json({ message: "Chapter not found" });
+    }
+
+    // Check if req.user.id === existing.author_id to ensure only the owner edits
+    if (existing.author_id !== req.session.userId) {
+      return res
+        .status(403)
+        .json({ error: "You can only edit your own chapters." });
+    }
+
     await Chapter.update(id, { title, content });
-    res.status(200).json({ message: "Contribution updated successfully" });
+    const updated = await Chapter.findById(req.params.chapterId);
+    return res.json(updated);
   } catch (error) {
-    res.status(500).json({ message: "Error updating contribution", error: error.message });
+    console.error("updateChapter error:", err);
+    return res.status(500).json({ error: "Failed to update chapter." });
   }
 };
