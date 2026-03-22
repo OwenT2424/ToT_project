@@ -21,35 +21,25 @@ router.post("/auth/logout", (req, res) => {
 });
 
 // stories route can go below
-router.post("/stories", (req, res) => {
-  res.json({ message: "TODO" });
-});
+router.post("/stories", requireAuth, storyController.createStory);
 
-router.get("/stories", (req, res) => {
-  res.json({ message: "TODO" });
-});
+router.get("/stories", storyController.getAllStories);
 
-router.get("/stories/:storyId", (req, res) => {
-  res.json({ message: "TODO" });
-});
+router.get("/stories/:id", storyController.getStory);
 
 // chapters route can go below
 
-router.get("/stories/:storyId/chapters", (req, res) => {
-  res.json({ message: "TODO" });
-});
+// Get all sentences for a specific story
+router.get("/stories/:storyId/chapters", chapterController.getChapters);
 
-router.get("/stories/:storyId/chapters/:chapterId", (req, res) => {
-  res.json({ message: "TODO" });
-});
+// Get a specific sentence/chapter by its ID
+router.get("/stories/:storyId/chapters/:id", chapterController.getChapter);
 
-router.post("/stories/:storyId/chapters", (req, res) => {
-  res.json({ message: "TODO" });
-});
+// Create a new sentence (Contribution) for a story
+router.post("/stories/:storyId/chapters", requireAuth, chapterController.createChapter);
 
-router.post("/stories/:storyId/chapters/:chapterId", (req, res) => {
-  res.json({ message: "TODO" });
-});
+// Update a specific sentence (if the user is the author)
+router.post("/stories/:storyId/chapters/:id", requireAuth, chapterController.updateChapter);
 
 // Server Block -----
 module.exports = router;
