@@ -1,8 +1,13 @@
+// KRIS
+
 // Server Block ------
 import pool from "../config/db.js";
 import { v4 as uuidv4 } from "uuid";
 
+// Chapter Model Object
 const Chapter = {
+
+  // Create function
   async create({ story_id, parent_id = null, author_id, title, content }) {
     const id = uuidv4();
     await pool.execute(
@@ -12,6 +17,7 @@ const Chapter = {
     return { id, story_id, parent_id, author_id, title, content };
   },
 
+  // Find Root Chapter By story ID and NULL parent ID
   async findRootByStoryId(storyId) {
     const [rows] = await pool.execute(
       "SELECT * FROM Chapters WHERE story_id = ? AND parent_id IS NULL",
@@ -20,6 +26,7 @@ const Chapter = {
     return rows[0] || null;
   },
 
+  // Find all chapters for a specific story ID - JOIN with Users on user ID to fetch username as well
   async findByStoryId(storyId) {
     const [rows] = await pool.execute(
       `
@@ -35,6 +42,7 @@ const Chapter = {
     return rows;
   },
 
+  // Find a specific chapter by chapter ID - JOIN with Users on user ID to fetch username as well 
   async findById(id) {
     const [rows] = await pool.execute(
       `
@@ -48,7 +56,8 @@ const Chapter = {
     );
     return rows[0] || null;
   },
-
+  
+  // Update a specific chapter by Chapter ID
   async update(id, { title, content }) {
     const fields = [];
     const values = [];

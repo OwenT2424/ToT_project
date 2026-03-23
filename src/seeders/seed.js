@@ -9,13 +9,13 @@ const SALT_ROUNDS = 10;
 
 async function seed() {
   try {
-    console.log('🌱 Starting seed...\n');
+    console.log('Starting seed...\n');
 
     // Clear existing data (order matters due to foreign keys)
     await pool.execute('DELETE FROM Chapters');
     await pool.execute('DELETE FROM Stories');
     await pool.execute('DELETE FROM Users');
-    console.log('✅ Cleared existing data.');
+    console.log('Cleared existing data.');
 
     // --- 1. Create 4 Users ---
     const passwordHash = await bcrypt.hash('password123', SALT_ROUNDS);
@@ -31,7 +31,7 @@ async function seed() {
         [user.id, user.username, user.email, passwordHash]
       );
     }
-    console.log('✅ 4 users created (alice, bob, carol, dave). Password: password123');
+    console.log('4 users created (alice, bob, carol, dave). Password: password123');
 
     // --- 2. Create 1 Story (owned by alice) ---
     const storyId = uuidv4();
@@ -39,7 +39,7 @@ async function seed() {
       'INSERT INTO Stories (id, author_id, title) VALUES (?, ?, ?)',
       [storyId, alice.id, 'The Lost Signal']
     );
-    console.log(`✅ Story created: "The Lost Signal" (id: ${storyId})`);
+    console.log(`Story created: "The Lost Signal" (id: ${storyId})`);
 
     // --- 3. Root Chapter (alice, parent_id = NULL) ---
     const ch1Id = uuidv4();
@@ -54,7 +54,7 @@ In its place came something else: a voice, low and rhythmic, counting backwards 
 in a language she almost recognized.`,
       ]
     );
-    console.log('✅ Chapter 1 created (root, author: alice).');
+    console.log('Chapter 1 created (root, author: alice).');
 
     // --- 4. Chapter 2 (bob continues) ---
     const ch2Id = uuidv4();
@@ -69,7 +69,7 @@ He arrived at her door before dawn, a battered notebook tucked under his arm.
 "It's not a broadcast. It's a beacon. And it's very close."`,
       ]
     );
-    console.log('✅ Chapter 2 created (author: bob).');
+    console.log('Chapter 2 created (author: bob).');
 
     // --- 5. Chapter 3 (carol continues) ---
     const ch3Id = uuidv4();
@@ -84,14 +84,14 @@ In her hand was a receiver she'd built herself — and it was screaming.
 "Whatever is transmitting," she said quietly, "it's underground."`,
       ]
     );
-    console.log('✅ Chapter 3 created (author: carol).');
+    console.log('Chapter 3 created (author: carol).');
 
     console.log('\n🎉 Seed complete!');
     console.log('   Chain: Chapter 1 (alice) → Chapter 2 (bob) → Chapter 3 (carol)');
     console.log('   dave is seeded but has not written anything — useful for testing permissions.\n');
 
   } catch (err) {
-    console.error('❌ Seed failed:', err);
+    console.error('Seed failed:', err);
   } finally {
     await pool.end();
   }

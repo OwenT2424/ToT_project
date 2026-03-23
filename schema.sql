@@ -1,5 +1,6 @@
 -- Run this once to set up the database schema
--- Usage: mysql -u root -p app_db < schema.sql
+-- Usage: docker exec -i mysql_db mysql -u root -prootpassword app_db < schema.sql
+-- Note: Run the command using Command Prompt; Not PowerShell
 
 CREATE TABLE IF NOT EXISTS Users (
   id          CHAR(36)      NOT NULL PRIMARY KEY,

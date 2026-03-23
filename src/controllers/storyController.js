@@ -1,16 +1,21 @@
+// OWEN
+
 // SERVER BLOCK -----
 import Story from "../models/storyModel.js";
 
+// Create the story
 export const createStory = async (req, res) => {
   try {
     const { title } = req.body;
-    // Assuming author_id comes from a decoded JWT or session in req.user
+    // author_id comes from session token in req.session.user
     const author_id = req.session.userId;
 
+    // Validate if title is supplied
     if (!title) {
       return res.status(400).json({ message: "Title is required" });
     }
 
+    // Create story object
     const newStory = await Story.create({ author_id, title });
     res.status(201).json(newStory);
   } catch (error) {
@@ -21,6 +26,7 @@ export const createStory = async (req, res) => {
   }
 };
 
+// Get all stories
 export const getAllStories = async (req, res) => {
   try {
     const stories = await Story.findAll();
@@ -33,6 +39,7 @@ export const getAllStories = async (req, res) => {
   }
 };
 
+// Get a specific story
 export const getStory = async (req, res) => {
   try {
     const story = await Story.findById(req.params.storyId);
