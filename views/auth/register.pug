@@ -1,0 +1,53 @@
+extends ../layout
+
+block content
+  .auth-wrap
+    h1.auth-title Join the story.
+    p.auth-sub Create an account to start writing.
+
+    .alert.alert-error#error-msg
+
+    .form-group
+      label.form-label(for="username") Username
+      input.form-input#username(type="text" name="username" autocomplete="username" autofocus)
+
+    .form-group
+      label.form-label(for="email") Email
+      input.form-input#email(type="email" name="email" autocomplete="email")
+
+    .form-group
+      label.form-label(for="password") Password
+      input.form-input#password(type="password" name="password" autocomplete="new-password")
+      p.form-hint Choose something you'll remember.
+
+    .btn-row
+      button.btn.btn-primary#submit-btn(type="button") Create account
+
+    p.auth-footer
+      | Already have an account? &nbsp;
+      a(href="/auth/login") Sign in
+
+block scripts
+  script.
+    document.getElementById('submit-btn').addEventListener('click', async () => {
+      const username = document.getElementById('username').value.trim();
+      const email = document.getElementById('email').value.trim();
+      const password = document.getElementById('password').value;
+      const errorEl = document.getElementById('error-msg');
+      errorEl.classList.remove('visible');
+
+      const res = await fetch('/api/auth/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'same-origin',
+        body: JSON.stringify({ username, email, password })
+      });
+      const data = await res.json();
+
+      if (res.ok) {
+        window.location.href = '/stories';
+      } else {
+        errorEl.textContent = data.error || 'Registration failed.';
+        errorEl.classList.add('visible');
+      }
+    });

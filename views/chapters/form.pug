@@ -1,0 +1,74 @@
+extends ../layout
+
+block content
+  .page-header
+    p.page-header__eyebrow
+      a(href=`/stories/${story.id}`)= story.title
+    h1.page-header__title= chapter ? 'Edit chapter' : 'Write a chapter'
+
+  .alert.alert-error#error-msg
+
+  .form-group
+    label.form-label(for="title") Chapter title
+    input.form-input#title(
+      type="text"
+      name="title"
+      value=chapter ? chapter.title : ''
+      placeholder="e.g. A Strange Frequency"
+      autocomplete="off"
+      autofocus
+    )
+
+  .form-group
+    label.form-label(for="content") Content
+    textarea.form-textarea#content(
+      name="content"
+      placeholder="The story continues here…"
+    )= chapter ? chapter.content : ''
+    p.form-hint Write as much or as little as you like. Each paragraph on a new line.
+
+  .btn-row
+    button.btn.btn-primary#submit-btn(type="button")= chapter ? 'Save changes' : 'Publish chapter'
+    a.btn.btn-ghost(href=`/stories/${story.id}`) Cancel
+
+block scripts
+  script.
+    const isEdit = !{JSON.stringify(!!(typeof chapter !== 'undefined' && chapter))};
+    const storyId = !{JSON.stringify(story.id)};
+    const chapterId = isEdit ? !{JSON.stringify(chapter ? chapter.id : null)} : null;
+    const parentId = !{JSON.stringify(typeof parentId !== 'undefined' ? parentId : null)};
+
+    document.getElementById('submit-btn').addEventListener('click', async () => {
+      const title = document.getElementById('title').value.trim();
+      const content = document.getElementById('content').value.trim();
+      const errorEl = document.getElementById('error-msg');
+      errorEl.classList.remove('visible');
+
+      if (!title || !content) {
+        errorEl.textContent = 'Both title and content are required.';
+        errorEl.classList.add('visible');
+        return;
+      }
+
+      const url = isEdit
+        ? `/api/stories/${storyId}/chapters/${chapterId}` // Update Chapter Route
+        : `/api/stories/${storyId}/chapters`;             // Create Chapter Route
+
+      const body = isEdit
+        ? { title, content }                              // Body for Update Chapter Route
+        : { title, content, parent_id: parentId };        // Body for Create Chapter Route
+
+      const res = await fetch(url, {
+        method: isEdit ? 'PUT' : 'POST',                  // Adjust method based on update/create
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body)
+      });
+      const data = await res.json();
+
+      if (res.ok) {
+        window.location.href = `/stories/${storyId}/chapters/${data.id}`;
+      } else {
+        errorEl.textContent = data.error || 'Something went wrong.';
+        errorEl.classList.add('visible');
+      }
+    });

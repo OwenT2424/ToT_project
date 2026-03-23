@@ -1,0 +1,33 @@
+extends ../layout
+
+block content
+  .page-header
+    p.page-header__eyebrow
+      a(href=`/stories/${story.id}`)= story.title
+    h1.page-header__title= chapter.title
+    p.page-header__meta
+      | by #{chapter.author_username}
+      if chapterIndex !== undefined
+        |  &nbsp;·&nbsp; Chapter #{chapterIndex + 1}
+
+  .chapter-prose
+    - var paragraphs = chapter.content.split('\n').filter(p => p.trim())
+    each para in paragraphs
+      p= para
+
+  if user && user === chapter.author_id
+    .mt-md
+      a.btn.btn-ghost(href=`/stories/${story.id}/chapters/${chapter.id}/edit`) Edit this chapter
+
+  .chapter-nav
+    if prevChapter
+      a.chapter-nav__link(href=`/stories/${story.id}/chapters/${prevChapter.id}`)
+        | ← #{prevChapter.title}
+    else
+      span
+    if nextChapter
+      a.chapter-nav__link(href=`/stories/${story.id}/chapters/${nextChapter.id}`)
+        | #{nextChapter.title} →
+    else if user
+      a.chapter-nav__link(href=`/stories/${story.id}/chapters/new`)
+        | Continue the story →

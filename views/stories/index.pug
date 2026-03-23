@@ -1,0 +1,18 @@
+extends ../layout
+
+block content
+  .page-header
+    p.page-header__eyebrow All Stories
+    h1.page-header__title Every tale begins somewhere.
+    if user
+      a.btn.btn-primary.mt-sm(href="/stories/new") Begin a new story
+
+  if stories && stories.length
+    ul.story-list
+      each story in stories
+        a.story-card(href=`/stories/${story.id}`)
+          span.story-card__title= story.title
+          span.story-card__meta
+            | by #{story.author_username} &nbsp;·&nbsp; #{new Date(story.created_at).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}
+  else
+    p.empty-state No stories yet. Be the first to write one.

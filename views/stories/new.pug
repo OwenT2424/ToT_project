@@ -1,0 +1,52 @@
+extends ../layout
+
+block content
+  .page-header
+    p.page-header__eyebrow New Story
+    h1.page-header__title What's the title?
+
+  .form-wrap
+    .alert.alert-error#error-msg
+    
+    .form-group
+      label.form-label(for="title") Story title
+      input.form-input#title(
+        type="text"
+        name="title"
+        placeholder="e.g. The Lost Signal"
+        autocomplete="off"
+        autofocus
+      )
+      p.form-hint You can always change this later.
+
+    .btn-row
+      button.btn.btn-primary#submit-btn(type="button") Create story
+      a.btn.btn-ghost(href="/stories") Cancel
+
+block scripts
+  script.
+    document.getElementById('submit-btn').addEventListener('click', async () => {
+      const title = document.getElementById('title').value.trim();
+      const errorEl = document.getElementById('error-msg');
+      errorEl.classList.remove('visible');
+
+      if (!title) {
+        errorEl.textContent = 'Please enter a title.';
+        errorEl.classList.add('visible');
+        return;
+      }
+
+      const res = await fetch('/api/stories', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ title })
+      });
+      const data = await res.json();
+
+      if (res.ok) {
+        window.location.href = `/stories/${data.id}`;
+      } else {
+        errorEl.textContent = data.error || 'Something went wrong.';
+        errorEl.classList.add('visible');
+      }
+    });

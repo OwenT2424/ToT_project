@@ -1,0 +1,27 @@
+extends ../layout
+
+block content
+  .page-header
+    p.page-header__eyebrow Story
+    h1.page-header__title= story.title
+    p.page-header__meta
+      | by #{story.author_username} &nbsp;·&nbsp; #{new Date(story.created_at).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}
+
+  if user && user === story.author_id && (!chapters || !chapters.length)
+    a.btn.btn-primary(href=`/stories/${story.id}/chapters/new`) Write the first chapter
+
+  if chapters && chapters.length
+    h2.section-title Chapters
+    ul.chapter-list
+      each chapter, i in chapters
+        li.chapter-item
+          span.chapter-item__num= i + 1
+          .chapter-item__body
+            a.chapter-item__title(href=`/stories/${story.id}/chapters/${chapter.id}`)= chapter.title
+            p.chapter-item__meta by #{chapter.author_username}
+
+    if user
+      .mt-lg
+        a.btn.btn-ghost(href=`/stories/${story.id}/chapters/new`) Add a chapter
+  else
+    p.empty-state.mt-md No chapters yet.

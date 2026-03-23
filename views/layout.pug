@@ -1,0 +1,29 @@
+doctype html
+html(lang="en")
+  head
+    meta(charset="UTF-8")
+    meta(name="viewport" content="width=device-width, initial-scale=1.0")
+    title= title ? `${title} — Tree O' Tale` : "Tree O' Tale"
+    link(rel="stylesheet" href="/css/style.css")
+
+  body
+    nav.nav
+      .nav__inner
+        a.nav__brand(href="/stories") Tree O' Tale
+        ul.nav__links
+          li: a(href="/stories") Stories
+          if user
+            li: a(href="/stories/new") Write
+            li: a(href="#" id="logout-link") Sign out
+          else
+            li: a(href="/auth/login") Sign in
+            li: a(href="/auth/register") Join
+
+    main(class=wide ? 'wide' : '')
+      block content
+
+    footer.footer
+      | A place for branching stories.
+
+    script(src="/js/main.js")
+    block scripts
