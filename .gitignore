@@ -28,8 +28,3 @@ build/
 .vscode/
 .idea/
 *.swp
-
-# Local
-views/
-public/
-src/routes/view.js

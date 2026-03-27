@@ -15,23 +15,34 @@ import requireAuth from "../middleware/requireAuth.js";
 router.get("/health", healthCheck);
 
 // Authentication Routes
+    // Register
 router.post("/auth/register", authController.register);
+    // Login
 router.post("/auth/login", authController.login);
+    // Logout
 router.post("/auth/logout", authController.logout);
 
 // Stories Routes
+    // Create a new story
 router.post("/stories", requireAuth, storyController.createStory);  // Protected
+    // Fetch all stories (home page)
 router.get("/stories", storyController.getAllStories);
+    // Fetch a specific story (read)
 router.get("/stories/:id", storyController.getStory);
 
 // Chapters Routes
-router.get("/stories/:storyId/chapters", chapterController.getChapters);
-router.get("/stories/:storyId/chapters/:id", chapterController.getChapter);
+    // Write a chapter for a story
 router.post(
   "/stories/:storyId/chapters",
   requireAuth,
   chapterController.createChapter,
-);                                                                  // Protected
+);          
+    // Get all chapters of a story
+router.get("/stories/:storyId/chapters", chapterController.getChapters);
+    // Get a particular chapter of a story
+router.get("/stories/:storyId/chapters/:id", chapterController.getChapter);
+                                                        // Protected
+    // Update a chapter for a story
 router.put(
   "/stories/:storyId/chapters/:id",
   requireAuth,

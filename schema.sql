@@ -17,6 +17,7 @@ CREATE TABLE IF NOT EXISTS Stories (
   title       VARCHAR(255)  NOT NULL,
   created_at  DATETIME      NOT NULL DEFAULT CURRENT_TIMESTAMP,
   updated_at  DATETIME      NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  INDEX idx_stories_author_id (author_id),
   FOREIGN KEY (author_id) REFERENCES Users(id) ON DELETE CASCADE
 );
 
@@ -29,6 +30,9 @@ CREATE TABLE IF NOT EXISTS Chapters (
   content     TEXT          NOT NULL,
   created_at  DATETIME      NOT NULL DEFAULT CURRENT_TIMESTAMP,
   updated_at  DATETIME      NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  INDEX idx_chapters_story_id (story_id),
+  INDEX idx_chapters_author_id (author_id),
+  INDEX idx_chapters_parent_id (parent_id),
   FOREIGN KEY (story_id)  REFERENCES Stories(id)  ON DELETE CASCADE,
   FOREIGN KEY (author_id) REFERENCES Users(id)    ON DELETE CASCADE,
   FOREIGN KEY (parent_id) REFERENCES Chapters(id) ON DELETE SET NULL
