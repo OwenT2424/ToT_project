@@ -1,0 +1,10 @@
+extends layout
+
+block content
+  .page-header
+    p.page-header__eyebrow Error #{status || 500}
+    h1.page-header__title= title || 'Something went wrong.'
+    p.page-header__meta= message || 'An unexpected error occurred.'
+
+  .mt-lg
+    a.btn.btn-ghost(href="/stories") ← Back to stories

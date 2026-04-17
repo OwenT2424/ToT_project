@@ -6,7 +6,9 @@ block content
     p.auth-sub Sign in to continue your story.
 
     .alert.alert-error#error-msg
-
+    if flash
+      .alert.alert-error.visible= flash
+      
     .form-group
       label.form-label(for="email") Email
       input.form-input#email(type="email" name="email" autocomplete="email" autofocus)
