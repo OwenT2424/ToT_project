@@ -39,7 +39,7 @@ block scripts
       const res = await fetch('/api/stories', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        credentials: 'same-origin'
+        credentials: 'same-origin',
         body: JSON.stringify({ title })
       });
       const data = await res.json();

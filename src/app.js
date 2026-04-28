@@ -5,7 +5,6 @@ import session from "express-session";
 import createMySQLStore from "express-mysql-session";
 import routes from "./routes/index.js";
 import viewRoutes from "./routes/view.js";
-import { title } from "process";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);

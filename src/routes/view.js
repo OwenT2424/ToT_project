@@ -42,6 +42,7 @@ router.get("/stories", async (req, res, next) => {
   }
 });
 
+// Route to page to create new story metadata
 router.get("/stories/new", requireAuth, (req, res) => {
   res.render("stories/new", {
     title: "New Story",
@@ -49,6 +50,7 @@ router.get("/stories/new", requireAuth, (req, res) => {
   });
 });
 
+// Route to page of a specific story ID - 404
 router.get("/stories/:storyId", async (req, res, next) => {
   try {
     const story = await Story.findById(req.params.storyId);
@@ -71,7 +73,7 @@ router.get("/stories/:storyId", async (req, res, next) => {
   }
 });
 
-// Chapter views
+// Chapter views - Write a chapter - 404 for story not found
 router.get("/stories/:storyId/chapters/new", requireAuth, async (req, res) => {
   try {
     const story = await Story.findById(req.params.storyId);
@@ -97,6 +99,7 @@ router.get("/stories/:storyId/chapters/new", requireAuth, async (req, res) => {
   }
 });
 
+// Get a specific chapter - 404
 router.get("/stories/:storyId/chapters/:chapterId", async (req, res) => {
   try {
     const story = await Story.findById(req.params.storyId);
@@ -133,6 +136,7 @@ router.get("/stories/:storyId/chapters/:chapterId", async (req, res) => {
   }
 });
 
+// Edit a chapter - 404, 403
 router.get(
   "/stories/:storyId/chapters/:chapterId/edit",
   requireAuth,
