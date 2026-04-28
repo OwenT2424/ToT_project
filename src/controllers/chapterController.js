@@ -85,6 +85,20 @@ export const getChapters = async (req, res) => {
   }
 };
 
+// Get chapter tree
+export const getTree = async (req, res) => {
+  try {
+    const story = await Story.findById(req.params.storyId);
+    if(!story) return res.status(404).json({ error: "Story not found." });
+
+    const tree = await Chapter.findTreebyStoryId(req.params.storyId);
+    return res.json(tree);
+  } catch (error) {
+    console.error('getTree error: ', error);
+    return res.status(500).json({ error: "Failed to fetch story tree." })
+  }
+}
+
 // Fetch a specific chapter
 export const getChapter = async (req, res) => {
   try {
