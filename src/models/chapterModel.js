@@ -77,6 +77,19 @@ const Chapter = {
       values,
     );
   },
+
+  // Fetch chapter tree with author usernames
+  async findTreeByStory(story_id) {
+    const [rows] = await pool.execute(
+      `SELECT c.id, c.parent_id, c.title, c.created_at, u.username 
+       FROM Chapters c 
+       JOIN Users u ON c.author_id = u.id 
+       WHERE c.story_id = ? 
+       ORDER BY c.created_at ASC`,
+      [story_id]
+    );
+    return rows;
+  },
 };
 
 // Server Block ------
