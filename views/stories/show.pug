@@ -12,16 +12,171 @@ block content
 
   if chapters && chapters.length
     h2.section-title Chapters
-    ul.chapter-list
-      each chapter, i in chapters
-        li.chapter-item
-          span.chapter-item__num= i + 1
-          .chapter-item__body
-            a.chapter-item__title(href=`/stories/${story.id}/chapters/${chapter.id}`)= chapter.title
-            p.chapter-item__meta by #{chapter.author_username}
+    //- S4-Block
+    //- Tree is rendered by client-side JS from the flat chapters array
+    #story-tree.story-tree(data-chapters=JSON.stringify(chapters))
+      noscript
+        //- Fallback flat list if JS is disabled
+        //- S4-Block over
+        //- S3 Block (Indented twice)
+        ul.chapter-list
+          each chapter, i in chapters
+            li.chapter-item
+              span.chapter-item__num= i + 1
+              .chapter-item__body
+                a.chapter-item__title(href=`/stories/${story.id}/chapters/${chapter.id}`)= chapter.title
+                p.chapter-item__meta by #{chapter.author_username}
+        //- S3-Block Over
 
     if user
       .mt-lg
-        a.btn.btn-ghost(href=`/stories/${story.id}/chapters/new`) Add a chapter
+        a.btn.btn-ghost(href=`/stories/${story.id}/chapters/new`) + Add a chapter
   else
     p.empty-state.mt-md No chapters yet.
+
+//- S4-Block
+//- block scripts
+//-   script.
+//-     (function () {
+//-       const container = document.getElementById('story-tree');
+//-       if (!container) return;
+
+//-       const storyId = window.location.pathname.split('/')[2];
+//-       const chapters = JSON.parse(container.dataset.chapters);
+
+//-       // Build a parent_id - children map
+//-       function buildTree(nodes) {
+//-         const map = {};
+//-         const roots = [];
+
+//-         nodes.forEach(n => { map[n.id] = { ...n, children: [] }; });
+//-         nodes.forEach(n => {
+//-           if (n.parent_id && map[n.parent_id]) {
+//-             map[n.parent_id].children.push(map[n.id]);
+//-           } else {
+//-             roots.push(map[n.id]);
+//-           }
+//-         });
+//-         return roots;
+//-       }
+
+//-       // Recursively render nodes as indented HTML
+//-       function renderNode(node, depth) {
+//-         const indent = depth * 1.5;
+//-         const childCount = node.children.length;
+//-         const continuationCount = childCount > 0 ? 1 : 0;
+//-         const branchCount = Math.max(childCount - 1, 0);
+//-         const hasFork = branchCount > 0;
+
+//-         let badgeText = '';
+//-         if (childCount === 1) {
+//-           badgeText = '1 continuation';
+//-         } else if (childCount > 1) {
+//-           badgeText = `1 continuation + ${branchCount} branch${branchCount === 1 ? '' : 'es'}`;
+//-         }
+
+//-         let html = `
+//-           <div class="tree-node" style="margin-left: ${indent}rem">
+//-             <div class="tree-node__connector ${depth > 0 ? 'tree-node__connector--child' : ''}"></div>
+//-             <div class="tree-node__content ${hasFork ? 'tree-node__content--fork' : ''}">
+//-               <a class="tree-node__link" href="/stories/${storyId}/chapters/${node.id}">
+//-                 ${escHtml(node.title)}
+//-               </a>
+//-               <span class="tree-node__meta">by ${escHtml(node.author_username)}</span>
+//-               ${badgeText ? `<span class="tree-node__badge">${badgeText}</span>` : ''}
+//-             </div>
+//-           </div>`;
+
+//-         node.children.forEach(child => {
+//-           html += renderNode(child, depth + 1);
+//-         });
+
+//-         return html;
+//-       }
+
+//-       function escHtml(str) {
+//-         return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+//-       }
+
+//-       const roots = buildTree(chapters);
+//-       container.innerHTML = roots.map(r => renderNode(r, 0)).join('');
+//-     })();
+//- S4-Block over
+block scripts
+  script.
+    (function () {
+      const container = document.getElementById('story-tree');
+      if (!container) return;
+
+      const storyId = window.location.pathname.split('/')[2];
+      const chapters = JSON.parse(container.dataset.chapters);
+
+      function buildTree(nodes) {
+        const map = {};
+        const roots = [];
+
+        nodes.forEach(n => {
+          map[n.id] = { ...n, children: [] };
+        });
+
+        nodes.forEach(n => {
+          if (n.parent_id && map[n.parent_id]) {
+            map[n.parent_id].children.push(map[n.id]);
+          } else {
+            roots.push(map[n.id]);
+          }
+        });
+
+        return roots;
+      }
+
+      function renderNode(node, level) {
+        const children = node.children || [];
+        const continuation = children[0] || null;
+        const branches = children.slice(1);
+        const childCount = children.length;
+        const branchCount = Math.max(childCount - 1, 0);
+
+        const indent = level * 1.5;
+        const hasFork = branches.length > 0;
+
+        //- let badgeText = '';
+        //- if (childCount === 1) {
+        //-   badgeText = '1 continuation';
+        //- } else if (childCount > 1) {
+        //-   badgeText = `1 continuation + ${branchCount} branch${branchCount === 1 ? '' : 'es'}`;
+        //- <!--- ${badgeText ? `<span class="tree-node__badge">${badgeText}</span>` : ''} --->
+        //- }
+
+        let html = `
+          <div class="tree-node" style="margin-left: ${indent}rem">
+            <div class="tree-node__connector ${level > 0 ? 'tree-node__connector--child' : ''}"></div>
+            <div class="tree-node__content ${hasFork ? 'tree-node__content--fork' : ''}">
+              <a class="tree-node__link" href="/stories/${storyId}/chapters/${node.id}">
+                ${escHtml(node.title)}
+              </a>
+              <span class="tree-node__meta">by ${escHtml(node.author_username)}</span>
+            </div>
+          </div>`;
+
+        branches.forEach(branch => {
+          html += renderNode(branch, level + 1);
+        });
+
+        if (continuation) {
+          html += renderNode(continuation, level);
+        }
+
+        return html;
+      }
+
+      function escHtml(str) {
+        return String(str)
+          .replace(/&/g, '&amp;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;');
+      }
+
+      const roots = buildTree(chapters);
+      container.innerHTML = roots.map(root => renderNode(root, 0)).join('');
+    })();

@@ -5,6 +5,7 @@ import session from "express-session";
 import createMySQLStore from "express-mysql-session";
 import routes from "./routes/index.js";
 import viewRoutes from "./routes/view.js";
+import flashMiddleware from "./middleware/flash.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -45,6 +46,9 @@ app.use(
     },
   }),
 );
+
+// Flash messages for browser redirects and protected views
+app.use(flashMiddleware);
 
 // Routes
 app.use("/api", routes); // API

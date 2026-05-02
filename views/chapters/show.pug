@@ -7,8 +7,8 @@ block content
     h1.page-header__title= chapter.title
     p.page-header__meta
       | by #{chapter.author_username}
-      if chapterIndex !== undefined
-        |  &nbsp;·&nbsp; Chapter #{chapterIndex + 1}
+      //- if chapterIndex !== undefined
+      //-   |  &nbsp;·&nbsp; Chapter #{chapterIndex + 1}
 
   .chapter-prose
     - var paragraphs = chapter.content.split('\n').filter(p => p.trim())
@@ -19,15 +19,70 @@ block content
     .mt-md
       a.btn.btn-ghost(href=`/stories/${story.id}/chapters/${chapter.id}/edit`) Edit this chapter
 
-  .chapter-nav
+  //- S4-Block
+  if branches && branches.length === 1
+    .chapter-nav
+      if prevChapter
+        a.chapter-nav__link(href=`/stories/${story.id}/chapters/${prevChapter.id}`)
+          | ← #{prevChapter.title}
+      else
+        span
+      a.chapter-nav__link(href=`/stories/${story.id}/chapters/${branches[0].id}`)
+        | #{branches[0].title} →
+
+  else if branches && branches.length > 1
+    .chapter-nav
+      if prevChapter
+        a.chapter-nav__link(href=`/stories/${story.id}/chapters/${prevChapter.id}`)
+          | ← #{prevChapter.title}
+      else
+        span
+      a.chapter-nav__link(href=`/stories/${story.id}/chapters/${branches[0].id}`)
+        | #{branches[0].title} →
+    .chapter-nav__branch-header
+      p.text-small.text-muted This chapter continues to #{branches[0].title} and branches into #{branches.length - 1} other path#{branches.length - 1 === 1 ? '' : 's'}.
+    ul.branch-list
+      each branch in branches.slice(1)
+        li.branch-item 
+          a.branch-item__link(href=`/stories/${story.id}/chapters/${branch.id}`)
+            span.branch-item__title= branch.title
+            span.branch-item__meta by #{branch.author_username}
+    
     if prevChapter
-      a.chapter-nav__link(href=`/stories/${story.id}/chapters/${prevChapter.id}`)
-        | ← #{prevChapter.title}
-    else
-      span
-    if nextChapter
-      a.chapter-nav__link(href=`/stories/${story.id}/chapters/${nextChapter.id}`)
-        | #{nextChapter.title} →
-    else if user
-      a.chapter-nav__link(href=`/stories/${story.id}/chapters/new`)
-        | Continue the story →
+      .mt-md
+        a.chapter-nav__link(href=`/stories/${story.id}/chapters/${prevChapter.id}`)
+          | ← #{prevChapter.title}
+  
+  else
+    //- No branches yet
+    .chapter-nav
+      if prevChapter
+        a.chapter-nav__link(href=`/stories/${story.id}/chapters/${prevChapter.id}`)
+          | ← #{prevChapter.title}
+      else
+        span
+      if user
+        a.chapter-nav__link(href=`/stories/${story.id}/chapters/new?parent=${chapter.id}`)
+          | Continue this story →
+      else
+        span.text-muted.text-small The story ends here — for now.
+  
+  //- Branch from here button — any logged-in user
+  if user
+    .mt-lg
+      a.btn.btn-ghost(href=`/stories/${story.id}/chapters/new?parent=${chapter.id}`) ⑂ &nbsp;Branch from here
+  //- S4-Block Over
+  //- S3 Block
+  //- .chapter-nav
+  //-   if prevChapter
+  //-     a.chapter-nav__link(href=`/stories/${story.id}/chapters/${prevChapter.id}`)
+  //-       | ← #{prevChapter.title}
+  //-   else
+  //-     span
+  //-   if nextChapter
+  //-     a.chapter-nav__link(href=`/stories/${story.id}/chapters/${nextChapter.id}`)
+  //-       | #{nextChapter.title} →
+  //-   else if user
+  //-     a.chapter-nav__link(href=`/stories/${story.id}/chapters/new`)
+  //-       | Continue the story →
+  //- S3 Block Over

@@ -74,30 +74,66 @@ router.get("/stories/:storyId", async (req, res, next) => {
 });
 
 // Chapter views - Write a chapter - 404 for story not found
-router.get("/stories/:storyId/chapters/new", requireAuth, async (req, res) => {
-  try {
-    const story = await Story.findById(req.params.storyId);
-    if (!story)
-      return res.status(404).render("error", {
-        status: 404,
-        title: "Story not found.",
-        message: "That story doesn't exist.",
+router.get(
+  "/stories/:storyId/chapters/new",
+  requireAuth,
+  async (req, res, next) => {
+    try {
+      const story = await Story.findById(req.params.storyId);
+      if (!story)
+        return res.status(404).render("error", {
+          status: 404,
+          title: "Story not found.",
+          message: "That story doesn't exist.",
+        });
+
+      // S4-Block
+      // Extract Parent ID from the query parameters
+      const requestedParentId = req.query.parent || null;
+      let parentId = requestedParentId;
+
+      // If parent ID exists
+      if (parentId) {
+        const parentChapter = await Chapter.findById(parentId);
+        if (!parentChapter) {
+          return res.status(404).render("error", {
+            status: 404,
+            title: "Parent chapter not found.",
+            message: "That parent chapter does not exist.",
+          });
+        }
+
+        if (parentChapter.story_id !== req.params.storyId) {
+          return res.status(400).render("error", {
+            status: 400,
+            title: "Invalid parent chapter.",
+            message: "That parent chapter does not belong to this story.",
+          });
+        }
+      } else {
+        const chapters = await Chapter.findByStoryId(req.params.storyId);
+        const last = chapters.length ? chapters[chapters.length - 1] : null;
+        parentId = last ? last.id : null;
+      }
+      // S4-Block Over
+
+      // S3-Block (Strict check)
+      // const chapters = await Chapter.findByStoryId(req.params.storyId);
+      // const lastChapter = chapters.length ? chapters[chapters.length - 1] : null;
+      // S3-Block Over
+
+      res.render("chapters/form", {
+        title: "Write a Chapter",
+        story,
+        chapter: null,
+        parentId,
+        user: req.session.userId,
       });
-
-    const chapters = await Chapter.findByStoryId(req.params.storyId);
-    const lastChapter = chapters.length ? chapters[chapters.length - 1] : null;
-
-    res.render("chapters/form", {
-      title: "Write a Chapter",
-      story,
-      chapter: null,
-      parentId: lastChapter ? lastChapter.id : null,
-      user: req.session.userId,
-    });
-  } catch (err) {
-    next(err);
-  }
-});
+    } catch (err) {
+      next(err);
+    }
+  },
+);
 
 // Get a specific chapter - 404
 router.get("/stories/:storyId/chapters/:chapterId", async (req, res) => {
@@ -120,15 +156,26 @@ router.get("/stories/:storyId/chapters/:chapterId", async (req, res) => {
     }
 
     const chapters = await Chapter.findByStoryId(req.params.storyId);
-    const idx = chapters.findIndex((c) => c.id === chapter.id);
+    // const idx = chapters.findIndex((c) => c.id === chapter.id);
+
+    // S4-Block - Fetch direct children of this chapter to show as branches
+    const branches = await Chapter.findChildren(chapter.id);
+    // S4-Block Over
 
     res.render("chapters/show", {
       title: chapter.title,
       story,
       chapter,
-      chapterIndex: idx,
-      prevChapter: idx > 0 ? chapters[idx - 1] : null,
-      nextChapter: idx < chapters.length - 1 ? chapters[idx + 1] : null,
+      // chapterIndex: idx,
+      prevChapter: chapter.parent_id
+        ? await Chapter.findById(chapter.parent_id)
+        : null,
+      // S4-Block - Sending branches instead of next chapter for frontend to parse
+      branches,
+      // S4-Block over
+      // S3-Block (Next chapter pointer)
+      // nextChapter: idx < chapters.length - 1 ? chapters[idx + 1] : null,
+      // S3-Block Over
       user: req.session.userId || null,
     });
   } catch (err) {
@@ -144,33 +191,27 @@ router.get(
     try {
       const story = await Story.findById(req.params.storyId);
       if (!story)
-        return res
-          .status(404)
-          .render("error", {
-            status: 404,
-            title: "Story not found.",
-            message: "That story doesn't exist.",
-          });
+        return res.status(404).render("error", {
+          status: 404,
+          title: "Story not found.",
+          message: "That story doesn't exist.",
+        });
 
       const chapter = await Chapter.findById(req.params.chapterId);
       if (!chapter || chapter.story_id !== req.params.storyId) {
-        return res
-          .status(404)
-          .render("error", {
-            status: 404,
-            title: "Chapter not found.",
-            message: "That chapter doesn't exist.",
-          });
+        return res.status(404).render("error", {
+          status: 404,
+          title: "Chapter not found.",
+          message: "That chapter doesn't exist.",
+        });
       }
 
       if (chapter.author_id !== req.session.userId) {
-        return res
-          .status(403)
-          .render("error", {
-            status: 403,
-            title: "Not allowed.",
-            message: "You can only edit your own chapters.",
-          });
+        return res.status(403).render("error", {
+          status: 403,
+          title: "Not allowed.",
+          message: "You can only edit your own chapters.",
+        });
       }
 
       res.render("chapters/form", {
