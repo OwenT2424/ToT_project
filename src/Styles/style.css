@@ -1,0 +1,210 @@
+/*i tried to organise this best i can !*/
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family:Andale Mono, monospace;
+}
+
+/* Header */
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: space between;
+    background: #472800ff;
+    color: #fff;
+    padding: 15px;
+    border-bottom: 2px solid rgb(97, 49, 33)
+}
+
+.search-form {
+    color:#ebd9a9;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%); 
+    justify-content: center;
+    display: flex;
+    width: 400px;  
+    align-items: center;
+}
+
+.search-form input[type="text"] {
+    padding: 9px 20px;
+    background-color:#fff;
+    font-family:Andale Mono, monospace;
+    flex: 1px;
+    color:#472800ff;
+    border: none;
+    border-radius: 15px 15px 15px 15px;
+    outline: none;
+    font-size: 14px;
+}
+
+.search-form input::placeholder {
+    color:#ebd9a9;       
+}
+
+
+/* Layout */
+.container {
+    display: flex;
+    min-height: calc(200vh - 120px);
+}
+
+hr {
+    border: none;
+    height: 1px;
+    background-color: rgb(97, 49, 33);
+    margin: 20px 0;
+}
+
+
+/* Sidebar Sidebar Sidebar Sidebar Sidebar Sidebar Sidebar Sidebar  Sidebar  Sidebar Sidebar  Sidebar  Sidebar Sidebar */
+.sidebar {
+    width: 220px;
+    background: #472800ff;
+    padding: 20px;
+}
+
+.sidebar h2 {
+    color: #ebd9a9;
+    padding-bottom: 9px;
+    font-size: 20px;
+}
+
+.sidebar ul {
+    list-style: none;
+}
+
+.sidebar ul li {
+    margin-bottom: 15px;
+}
+
+.sidebar ul li a {
+    font-weight: bold;
+    color: #ebd9a9;
+    text-decoration: none;
+    transition: color 0.3s ease, text-decoration 0.3s ease;
+}
+
+.sidebar ul li a:hover{
+    font-weight: bold;
+    color: #fffcf5ff;
+    text-decoration: none;
+    transition: color 0.3s ease, text-decoration 0.3s ease;
+}
+
+
+
+/* conetnt space */
+.content {
+    flex: 1;
+    padding: 20px;
+    background: #fffcf5ff;
+    color: #ebd9a9;
+}
+
+/* Footer Footer Footer Footer Footer Footer Footer Footer Footer Footer Footer Footer Footer Footer Footer Footer*/
+.footer {
+    background: #472800ff;
+    border-top: 2px solid rgb(97, 49, 33);
+    color: #ebd9a9;
+    justify-content: center;
+    padding: 30px;
+}
+
+.footer-main {
+    display: flex;
+    justify-content: center;
+}
+
+
+.footer-column {
+    flex: 1;
+    padding: 0 15px;
+    text-align: center;
+}
+
+.footer-column h3 {
+    font-weight: bold;
+    text-align: center;
+    font-size: 15px;
+    margin-bottom: 5px;
+}
+
+.footer-column a {
+    font-weight: bold;
+    font-size: 12px;
+    text-align: center;
+    padding-bottom: 10px;
+    color:#ebd9a9;
+    text-decoration: none;
+}
+
+.footer-column a:hover {
+    text-decoration: none;
+    color: #fffcf5ff;
+    transition: color 0.3s ease, text-decoration 0.3s ease;
+}
+
+
+.fb {
+    text-align: center;
+    padding: 15px;
+    font-size: 14px;
+    color:#ebd9a9;
+}
+
+/*blob is the bubble in the side menu, this is where the users stories and history will pop up #goodluck, i know the bubble gets bigger
+when theres a certain amout of text, ill fix that later*/
+
+.blob {
+    font-family:Andale Mono, monospace;
+    display: block;
+    width: 175px;
+    padding: 20px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    background-color: #fffcf5ff;
+    border: none;
+    border-radius: 25px 5px 25px 5px; 
+    font-size: 14px;
+    text-align: left;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.blob a {
+    text-decoration: none;
+}
+
+.blob:hover {
+    background-color: #ebd9a9;
+}
+
+/*colour blobs yaay!!!*/
+
+.r{
+    color: #dd196b;
+}
+.r a {
+    color: #dd196b;
+}
+
+.b {
+    color: rgb(25, 179, 218);
+}
+.b a {
+    color: rgb(25, 179, 218);
+}
+
+.y {
+    color: rgb(247, 193, 19);
+}
+.y a {
+    color: rgb(247, 193, 19);
+}
