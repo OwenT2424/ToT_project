@@ -7,8 +7,8 @@ block content
     h1.page-header__title= chapter.title
     p.page-header__meta
       | by #{chapter.author_username}
-      if chapterIndex !== undefined
-        |  &nbsp;·&nbsp; Chapter #{chapterIndex + 1}
+      //- if chapterIndex !== undefined
+        //- |  &nbsp;·&nbsp; Chapter #{chapterIndex + 1}
 
   .chapter-prose
     - var paragraphs = chapter.content.split('\n').filter(p => p.trim())

@@ -84,14 +84,34 @@ router.get("/stories/:storyId/chapters/new", requireAuth, async (req, res) => {
         message: "That story doesn't exist.",
       });
 
-    const chapters = await Chapter.findByStoryId(req.params.storyId);
-    const lastChapter = chapters.length ? chapters[chapters.length - 1] : null;
+        const requestedParentId = req.query.parent || null
+        let parentId = requestedParentId;
+        if (parentId) {
+          const parentChapter = await Chapter.findById(parentId);
+          if (!parentChapter || parentChapter.story_id !== req.params.storyId) {
+            return res.status(404).render("error", {
+              status: 404,
+              title: "Parent chapter not found.",
+              message: "The chapter you're trying to reply to doesn't exist.",
+            });
+          }
+
+          
+
+      } else {
+          const chapters = await Chapter.findByStoryId(req.params.storyId);
+          const lastChapter = chapters.length ? chapters[chapters.length - 1] : null;
+          parentId = lastChapter ? lastChapter.id : null;
+     }    
+
+    // const chapters = await Chapter.findByStoryId(req.params.storyId);
+    // const lastChapter = chapters.length ? chapters[chapters.length - 1] : null;
 
     res.render("chapters/form", {
       title: "Write a Chapter",
       story,
       chapter: null,
-      parentId: lastChapter ? lastChapter.id : null,
+      parentId,
       user: req.session.userId,
     });
   } catch (err) {
