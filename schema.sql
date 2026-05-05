@@ -1,6 +1,6 @@
 -- Run this once to set up the database schema
--- Usage: docker exec -i mysql_db mysql -u root -prootpassword app_db < schema.sql
--- Note: Run the command using Command Prompt; Not PowerShell
+-- docker exec -i mysql_db mysql -u root -prootpassword app_db < schema.sql
+-- Run using command prompt
 
 CREATE TABLE IF NOT EXISTS Users (
   id          CHAR(36)      NOT NULL PRIMARY KEY,
@@ -24,7 +24,7 @@ CREATE TABLE IF NOT EXISTS Stories (
 CREATE TABLE IF NOT EXISTS Chapters (
   id          CHAR(36)      NOT NULL PRIMARY KEY,
   story_id    CHAR(36)      NOT NULL,
-  parent_id   CHAR(36)      NULL,  -- NULL = root chapter; ready for branching later
+  parent_id   CHAR(36)      NULL,
   author_id   CHAR(36)      NOT NULL,
   title       VARCHAR(255)  NOT NULL,
   content     TEXT          NOT NULL,

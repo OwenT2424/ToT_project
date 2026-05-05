@@ -3,8 +3,8 @@
 //  Set:  req.flash('You must be logged in to do that.')
 //  Read: automatically available as `flash` in all Pug templates
 
-function flashMiddleware(req, res, next) {
-    // Expose any pending flash message to Pug templates
+export default function flashMiddleware(req, res, next) {
+    // Exposes any pending flash message to Pug templates
     res.locals.flash = req.session.flash || null;
 
     // Clear it after reading so it only shows once
@@ -17,5 +17,3 @@ function flashMiddleware(req, res, next) {
 
     next();
 }
-
-module.exports = flashMiddleware;

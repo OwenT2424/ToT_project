@@ -53,6 +53,10 @@ router.put(
   chapterController.updateChapter,
 );                                                                  // Protected
 
+// S-4 Block
+router.get('/stories/:storyId/tree', chapterController.getTree);
+// S-4 Block Over
+
 // Server Block -----
 router.get("/stories/:storyId/tree", chapterController.getTree)
 export default router;
