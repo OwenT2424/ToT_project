@@ -37,10 +37,6 @@ router.post(
   requireAuth,
   chapterController.createChapter,
 );          
-
-    // Fetch the collaborative chapter tree 
-router.get("/stories/:storyId/tree", chapterController.getChapterTree);
-
     // Get all chapters of a story
 router.get("/stories/:storyId/chapters", chapterController.getChapters);
     // Get a particular chapter of a story
@@ -58,5 +54,4 @@ router.get('/stories/:storyId/tree', chapterController.getTree);
 // S-4 Block Over
 
 // Server Block -----
-router.get("/stories/:storyId/tree", chapterController.getTree)
 export default router;
