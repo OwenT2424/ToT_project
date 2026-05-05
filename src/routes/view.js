@@ -83,15 +83,23 @@ router.get("/stories/:storyId/chapters/new", requireAuth, async (req, res) => {
         title: "Story not found.",
         message: "That story doesn't exist.",
       });
-
-    const chapters = await Chapter.findByStoryId(req.params.storyId);
-    const lastChapter = chapters.length ? chapters[chapters.length - 1] : null;
+    let parentId = req.params.parent || null;
+    if (parentId) {const parentChapter = await Chapter.findById (parentId);
+      if (!parentChapter || parentChapter.storyId !== req.params.storyId) {parentId = null};
+    }
+    if (!parentId) {
+      const chapters = await Chapter.findByStoryId (req.params.storyId);
+      const last = chapters.length ? chapters[chapters.length-1] : null;
+      parentId = last ? last.id : null;
+    }
+    //const chapters = await Chapter.findByStoryId(req.params.storyId);
+    //const lastChapter = chapters.length ? chapters[chapters.length - 1] : null;
 
     res.render("chapters/form", {
       title: "Write a Chapter",
       story,
       chapter: null,
-      parentId: lastChapter ? lastChapter.id : null,
+      parentId: parentId,
       user: req.session.userId,
     });
   } catch (err) {
