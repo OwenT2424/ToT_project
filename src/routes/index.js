@@ -50,4 +50,5 @@ router.put(
 );                                                                  // Protected
 
 // Server Block -----
+router.get("/stories/:storyId/tree", chapterController.getTree)
 export default router;
