@@ -17,18 +17,10 @@ function requireAuth(req, res, next) {
   next();
 }
 
-// Authentication Views
-router.get("/auth/login", (req, res) => {
-  if (req.session.userId) return res.redirect("/stories");
-  res.render("auth/login", { title: "Sign in" });
-});
+// Root redirect - Home Page
+router.get("/", (req, res) => res.redirect("/stories"));
 
-router.get("/auth/register", (req, res) => {
-  if (req.session.userId) return res.redirect("/stories");
-  res.render("auth/register", { title: "Join" });
-});
-
-// Story
+// Story (Home Page) - Renders stories/index.pug
 router.get("/stories", async (req, res, next) => {
   try {
     const stories = await Story.findAll();
@@ -40,6 +32,17 @@ router.get("/stories", async (req, res, next) => {
   } catch (err) {
     next(err);
   }
+});
+
+// Authentication Views
+router.get("/auth/login", (req, res) => {
+  if (req.session.userId) return res.redirect("/stories");
+  res.render("auth/login", { title: "Sign in" });
+});
+
+router.get("/auth/register", (req, res) => {
+  if (req.session.userId) return res.redirect("/stories");
+  res.render("auth/register", { title: "Join" });
 });
 
 // Route to page to create new story metadata
@@ -226,8 +229,5 @@ router.get(
     }
   },
 );
-
-// Root redirect
-router.get("/", (req, res) => res.redirect("/stories"));
 
 export default router;

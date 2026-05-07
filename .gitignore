@@ -28,3 +28,7 @@ build/
 .vscode/
 .idea/
 *.swp
+
+./
+
+test.md
